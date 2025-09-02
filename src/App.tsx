@@ -41,7 +41,7 @@ export default function App({ onToggleTheme }: Props) {
     }
     setLoading(true);
     try {
-      const base = API_BASE || "http://localhost:8000";
+      const base = API_BASE || "https://news-reframer-backend.onrender.com";
       const r = await fetch(`${base}/api/rewrite`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
