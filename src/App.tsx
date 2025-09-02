@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Grid,
   Alert,
   TextField,
   Typography,
@@ -130,42 +129,46 @@ export default function App({ onToggleTheme }: Props) {
           </CardContent>
         </Card>
 
-        {/* Results grid */}
+        {/* Results grid via CSS grid (avoids MUI Grid typings entirely) */}
         {outputs && (
-          <Grid container spacing={3}>
+          <Box
+            sx={{
+              display: "grid",
+              gap: 3,
+              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+            }}
+          >
             {Object.entries(outputs).map(([k, v]) => (
-              <Grid item xs={12} sm={6} key={k}>
-                <Card>
-                  <CardHeader title={labels[k] || k} />
-                  <CardContent>
-                    {k === "curiosity_headline" ? (
-                      <Typography variant="h6" color="primary">
-                        {v}
+              <Card key={k}>
+                <CardHeader title={labels[k] || k} />
+                <CardContent>
+                  {k === "curiosity_headline" ? (
+                    <Typography variant="h6" color="primary">
+                      {v}
+                    </Typography>
+                  ) : k === "sober_bullets" ? (
+                    <Box component="ul" sx={{ pl: 3, m: 0 }}>
+                      {v
+                        .split("\n")
+                        .map((s) => s.replace(/^[-•]\s*/, "").trim())
+                        .filter(Boolean)
+                        .map((li, i) => (
+                          <Box component="li" key={i}>
+                            {li}
+                          </Box>
+                        ))}
+                    </Box>
+                  ) : (
+                    v.split(/\n\n+/).map((p, i) => (
+                      <Typography key={i} variant="body2" paragraph>
+                        {p}
                       </Typography>
-                    ) : k === "sober_bullets" ? (
-                      <Box component="ul" sx={{ pl: 3, m: 0 }}>
-                        {v
-                          .split("\n")
-                          .map((s) => s.replace(/^[-•]\s*/, "").trim())
-                          .filter(Boolean)
-                          .map((li, i) => (
-                            <Box component="li" key={i}>
-                              {li}
-                            </Box>
-                          ))}
-                      </Box>
-                    ) : (
-                      v.split(/\n\n+/).map((p, i) => (
-                        <Typography key={i} variant="body2" paragraph>
-                          {p}
-                        </Typography>
-                      ))
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
+                    ))
+                  )}
+                </CardContent>
+              </Card>
             ))}
-          </Grid>
+          </Box>
         )}
 
         {/* Footer */}
