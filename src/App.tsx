@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -17,7 +17,6 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import SparklesIcon from "@mui/icons-material/AutoAwesome";
 import ShieldIcon from "@mui/icons-material/Shield";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
 
 type Props = { onToggleTheme?: () => void };
 
@@ -28,11 +27,10 @@ export default function App({ onToggleTheme }: Props) {
   const [outputs, setOutputs] = useState<null | Record<string, string>>(null);
 
   const API_BASE = useMemo(() => {
-    const vite = (import.meta as any)?.env?.VITE_API_URL;
+    const vite = (import.meta as any)?.env?.VITE_API_URL as string | undefined;
     const injected = (window as any)?.API_URL_OVERRIDE as string | undefined;
     return (vite || injected || "").replace(/\/$/, "");
   }, []);
-  
 
   async function handleReframe() {
     setError("");
@@ -50,7 +48,7 @@ export default function App({ onToggleTheme }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: topic }),
       });
-      console.log("API_BASE is",base);
+      console.log("API_BASE is", base);
       if (!r.ok) throw new Error(await r.text());
       const data = await r.json();
       setOutputs(data.outputs || {});
